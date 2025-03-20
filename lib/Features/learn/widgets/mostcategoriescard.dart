@@ -1,22 +1,10 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:deen/Features/learn/widgets/audiomanger.dart';
+import 'package:flutter/material.dart';
 import 'package:deen/Models/mostof%20categorymodel.dart';
 import 'package:animated_widgets/widgets/rotation_animated.dart';
 import 'package:animated_widgets/widgets/shake_animated_widget.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
-class AudioController {
-  static final AudioPlayer _audioPlayer = AudioPlayer();
-
-  static Future<void> playSound(String soundPath) async {
-    await _audioPlayer.stop(); // Stop any currently playing audio
-    await _audioPlayer.play(AssetSource(soundPath));
-  }
-
-  static Future<void> stopSound() async {
-    await _audioPlayer.stop(); // Stop the audio when switching screens
-  }
-}
 
 class CategoriesCard extends StatefulWidget {
   const CategoriesCard({super.key, required this.categorymodel});
@@ -31,20 +19,14 @@ class _CategoriesCardState extends State<CategoriesCard> {
   bool flag = false;
 
   void buttonAction() async {
-    await AudioController.playSound(widget.categorymodel.sound);
-
-    setState(() {
-      flag = true;
-    });
-
-    Future.delayed(const Duration(milliseconds: 300), () {
-      setState(() => flag = false);
-    });
+    await AudioManager.playSound(widget.categorymodel.sound);
+    setState(() => flag = true);
+    Future.delayed(const Duration(milliseconds: 300), () => setState(() => flag = false));
   }
 
   @override
   void dispose() {
-    AudioController.stopSound(); // Stop audio when leaving the page
+    AudioManager.stopSound(); // Ensure sound stops when leaving the screen
     super.dispose();
   }
 
